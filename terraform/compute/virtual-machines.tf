@@ -168,3 +168,13 @@ resource "azurerm_linux_virtual_machine" "enterprise_vm" {
     version   = "latest"
   }
 }
+
+output "vm_public_ip" {
+  value = azurerm_public_ip.vm_dev_ip.ip_address
+}
+
+output "ssh_private_key" {
+  description = "SSH private key for VM access"
+  value       = tls_private_key.vm_ssh.private_key_pem
+  sensitive   = true
+}
