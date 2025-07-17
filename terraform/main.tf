@@ -3,30 +3,30 @@
 # Call the policies module
 module "policies" {
   source = "./policies"
-
+  
   # Pass any required variables to the policies module
-  # subscription_id     = var.subscription_id
-  # resource_group_name = var.resource_group_name
+  subscription_id = var.subscription_id
+  resource_group_name = var.resource_group_name
 }
 
 # Call the compute module
 module "compute" {
   source = "./compute"
-
+  
   # Pass any required variables to the compute module
-  # resource_group_name = var.resource_group_name
-  # location            = var.location
-  # vm_size             = var.vm_size
+  resource_group_name = var.resource_group_name
+  location = var.location
+  vm_size = var.vm_size
 }
 
 # Call the storage module
 module "storage" {
   source = "./storage"
-
+  
   # Pass any required variables to the storage module
-  # resource_group_name  = var.resource_group_name
-  # location             = var.location
-  # storage_account_name = var.storage_account_name
+  resource_group_name = var.resource_group_name
+  location = var.location
+  storage_account_name = var.storage_account_name
 }
 
 # Outputs referencing module outputs instead of direct resources
