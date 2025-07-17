@@ -24,9 +24,9 @@ module "storage" {
   source = "./storage"
 
   # Pass any required variables to the storage module
-  resource_group_name   = var.resource_group_name
-  location              = var.location
-  storage_account_name  = var.storage_account_name
+  resource_group_name  = var.resource_group_name
+  location             = var.location
+  storage_account_name = var.storage_account_name
 }
 
 # Outputs referencing module outputs instead of direct resources
