@@ -5,7 +5,7 @@ resource "azurerm_resource_group_policy_assignment" "vm_tags_development" {
   policy_definition_id = azurerm_policy_definition.require_vm_tags.id
   display_name         = "VM Tags Policy - Development RG"
   description          = "Enforces mandatory tags on VMs in Development Resource Group"
-  
+
   metadata = jsonencode({
     assignedBy = "Terraform"
     category   = "Tags"
@@ -19,7 +19,7 @@ resource "azurerm_resource_group_policy_assignment" "storage_tags_storage_rg" {
   policy_definition_id = azurerm_policy_definition.require_storage_tags.id
   display_name         = "Storage Tags Policy - Storage RG"
   description          = "Enforces mandatory tags on Storage Accounts in Storage Resource Group"
-  
+
   metadata = jsonencode({
     assignedBy = "Terraform"
     category   = "Tags"
@@ -33,7 +33,7 @@ resource "azurerm_resource_group_policy_assignment" "enterprise_initiative" {
   policy_definition_id = azurerm_policy_set_definition.enterprise_governance.id
   display_name         = "Enterprise Governance Initiative - Enterprise RG"
   description          = "Comprehensive governance policies for Enterprise Resource Group"
-  
+
   metadata = jsonencode({
     assignedBy = "Terraform"
     category   = "Governance"
@@ -49,7 +49,7 @@ resource "azurerm_subscription_policy_assignment" "audit_tags_subscription" {
   policy_definition_id = azurerm_policy_definition.audit_missing_tags.id
   display_name         = "Audit Missing Tags - Subscription Level"
   description          = "Audits all resources across subscription for missing required tags"
-  
+
   metadata = jsonencode({
     assignedBy = "Terraform"
     category   = "Audit"

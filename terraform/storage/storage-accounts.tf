@@ -12,17 +12,17 @@ resource "azurerm_storage_account" "storage_rg_account" {
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  
+
   # Government compliance settings
-  min_tls_version          = "TLS1_2"
+  min_tls_version           = "TLS1_2"
   enable_https_traffic_only = true
-  
+
   # These tags are REQUIRED by the Storage policy
   tags = merge(var.common_tags, {
     Environment        = "Production"
-    Owner             = "Storage Team"
-    Department        = "IT"
-    Compliance        = "NIST"
+    Owner              = "Storage Team"
+    Department         = "IT"
+    Compliance         = "NIST"
     DataClassification = "Internal"
   })
 }
@@ -34,26 +34,26 @@ resource "azurerm_storage_account" "enterprise_storage" {
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
-  
+
   # Government compliance settings
-  min_tls_version          = "TLS1_2"
+  min_tls_version           = "TLS1_2"
   enable_https_traffic_only = true
-  
+
   blob_properties {
     versioning_enabled = true
     delete_retention_policy {
       days = 30
     }
   }
-  
+
   # These tags are REQUIRED by the Enterprise Initiative
   tags = merge(var.common_tags, {
     Environment        = "Production"
-    Owner             = "Enterprise Team"
-    Department        = "IT"
-    Project           = "Enterprise-Storage"
-    CostCenter        = "IT-STORAGE-001"
-    Compliance        = "NIST"
+    Owner              = "Enterprise Team"
+    Department         = "IT"
+    Project            = "Enterprise-Storage"
+    CostCenter         = "IT-STORAGE-001"
+    Compliance         = "NIST"
     DataClassification = "Confidential"
   })
 }

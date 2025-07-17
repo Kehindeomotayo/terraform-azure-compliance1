@@ -46,7 +46,7 @@ resource "azurerm_public_ip" "vm_dev_ip" {
   location            = var.location
   resource_group_name = azurerm_resource_group.development.name
   allocation_method   = "Static"
-  
+
   tags = merge(var.common_tags, {
     Environment = "Development"
     Purpose     = "VM Development Access"
@@ -58,7 +58,7 @@ resource "azurerm_network_interface" "vm_dev_nic" {
   name                = "${var.resource_prefix}-vm-dev-nic"
   location            = var.location
   resource_group_name = azurerm_resource_group.development.name
-  
+
   tags = merge(var.common_tags, {
     Environment = "Development"
   })
@@ -78,7 +78,7 @@ resource "azurerm_linux_virtual_machine" "development_vm" {
   resource_group_name = azurerm_resource_group.development.name
   size                = "Standard_B2s"
   admin_username      = "azureuser"
-  
+
   # These tags are REQUIRED by the VM policy
   tags = merge(var.common_tags, {
     Environment = "Development"
@@ -117,7 +117,7 @@ resource "azurerm_network_interface" "vm_enterprise_nic" {
   name                = "${var.resource_prefix}-vm-enterprise-nic"
   location            = var.location
   resource_group_name = azurerm_resource_group.enterprise.name
-  
+
   tags = merge(var.common_tags, {
     Purpose = "Enterprise VM Network"
   })
@@ -135,7 +135,7 @@ resource "azurerm_linux_virtual_machine" "enterprise_vm" {
   resource_group_name = azurerm_resource_group.enterprise.name
   size                = "Standard_B2s"
   admin_username      = "azureuser"
-  
+
   # These tags are REQUIRED by the Enterprise Initiative
   tags = merge(var.common_tags, {
     Environment = "Production"

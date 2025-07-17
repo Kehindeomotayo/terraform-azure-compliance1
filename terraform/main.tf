@@ -21,9 +21,9 @@ output "policy_assignments" {
       policy_type    = "Enterprise Initiative (Multiple Policies)"
     }
     audit_subscription = {
-      name           = azurerm_subscription_policy_assignment.audit_tags_subscription.name
-      scope          = "Subscription"
-      policy_type    = "Audit Policy"
+      name        = azurerm_subscription_policy_assignment.audit_tags_subscription.name
+      scope       = "Subscription"
+      policy_type = "Audit Policy"
     }
   }
 }
