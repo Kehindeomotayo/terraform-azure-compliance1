@@ -8,10 +8,12 @@ module "compute" {
 }
 
 module "storage" {
-  source        = "./storage"
-  storage_rg    = azurerm_resource_group.storage.name
-  enterprise_rg = azurerm_resource_group.enterprise.name
-  location      = var.location
+  source          = "./storage"
+  storage_rg      = azurerm_resource_group.storage.name
+  enterprise_rg   = azurerm_resource_group.enterprise.name
+  common_tags     = var.common_tags
+  resource_prefix = var.resource_prefix
+  location        = var.location
 }
 
 module "policies" {

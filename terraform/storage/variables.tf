@@ -15,4 +15,13 @@ variable "storage_rg" {
   type        = string
 }
 
+variable "common_tags" {
+  description = "Common tags for all resources"
+  type        = map(string)
+}
+
+variable "resource_prefix" {
+  description = "Prefix for resource names"
+  type        = string
+}
 # Add other variables as needed by your storage resources

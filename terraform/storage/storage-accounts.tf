@@ -61,6 +61,6 @@ resource "azurerm_storage_account" "enterprise_storage" {
 # Storage Container for demonstration
 resource "azurerm_storage_container" "demo_container" {
   name                  = "demo-data"
-  resource_group_name   = var.storage_rg
+  storage_account_name  = azurerm_storage_account.storage_rg_account.name
   container_access_type = "private"
 }
