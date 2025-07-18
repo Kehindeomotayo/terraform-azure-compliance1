@@ -3,7 +3,7 @@ variable "subscription_id" {
   type        = string
 }
 
-variable "rg_development" {
+variable "development_rg" {
   description = "Development resource group object"
   type = object({
     id       = string
@@ -12,7 +12,7 @@ variable "rg_development" {
   })
 }
 
-variable "rg_storage" {
+variable "storage_rg" {
   description = "Storage resource group object"
   type = object({
     id       = string
@@ -21,7 +21,7 @@ variable "rg_storage" {
   })
 }
 
-variable "rg_enterprise" {
+variable "enterprise_rg" {
   description = "Enterprise resource group object"
   type = object({
     id       = string

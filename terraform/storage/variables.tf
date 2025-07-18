@@ -1,6 +1,6 @@
 # storage/variables.tf
 
-variable "rg_name" {
+variable "enterprise_rg" {
   description = "The resource group name for storage resources"
   type        = string
 }
@@ -10,7 +10,7 @@ variable "location" {
   type        = string
 }
 
-variable "storage_account_name" {
+variable "storage_rg" {
   description = "The name of the storage account"
   type        = string
 }

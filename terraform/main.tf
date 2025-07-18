@@ -1,21 +1,21 @@
 module "compute" {
   source   = "./compute"
-  rg_name  = azurerm_resource_group.development.name
+  dev_rg  = azurerm_resource_group.development.name
   location = azurerm_resource_group.development.location
 }
 
 module "storage" {
   source             = "./storage"
-  storage_rg_name    = azurerm_resource_group.storage.name
-  enterprise_rg_name = azurerm_resource_group.enterprise.name
+  storage_rg    = azurerm_resource_group.storage.name
+  enterprise_rg = azurerm_resource_group.enterprise.name
   location           = var.location
 }
 
 module "policies" {
   source          = "./policies"
-  rg_development  = azurerm_resource_group.development
-  rg_storage      = azurerm_resource_group.storage
-  rg_enterprise   = azurerm_resource_group.enterprise
+  development_rg  = azurerm_resource_group.development
+  storage_rg      = azurerm_resource_group.storage
+  enterprise_rg   = azurerm_resource_group.enterprise
   subscription_id = data.azurerm_client_config.current.subscription_id
 }
 
