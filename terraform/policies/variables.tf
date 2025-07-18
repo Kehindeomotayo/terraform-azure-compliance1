@@ -1,15 +1,31 @@
-# policies/variables.tf
-
 variable "subscription_id" {
   description = "The subscription ID for policy assignments"
   type        = string
-  default     = null
 }
 
-variable "resource_group_name" {
-  description = "The resource group name for policy assignments"
-  type        = string
-  default     = null
+variable "rg_development" {
+  description = "Development resource group object"
+  type = object({
+    id       = string
+    name     = string
+    location = string
+  })
 }
 
-# Add other variables as needed by your policy resources
+variable "rg_storage" {
+  description = "Storage resource group object"
+  type = object({
+    id       = string
+    name     = string
+    location = string
+  })
+}
+
+variable "rg_enterprise" {
+  description = "Enterprise resource group object"
+  type = object({
+    id       = string
+    name     = string
+    location = string
+  })
+}
