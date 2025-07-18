@@ -10,6 +10,11 @@ variable "location" {
   type        = string
 }
 
+variable "enterprise_rg" {
+  description = "The resource group name for storage resources"
+  type        = string
+}
+
 variable "vm_size" {
   description = "The size of the virtual machine"
   type        = string
