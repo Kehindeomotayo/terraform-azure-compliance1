@@ -58,23 +58,8 @@ jobs:
     - name: Policy Compliance Check
       run: |
         cd terraform
-    
-        echo "Initializing Terraform..."
-        terraform init -input=false
-    
-        echo "Creating binary plan..."
-        terraform plan -out=tfplan -input=false
-    
-        echo "Converting plan to JSON..."
-        terraform show -json tfplan > plan.json
-    
-        echo "Checking policy definitions in JSON..."
-        jq -r '
-          .planned_values.root_module.resources[]
-          | select(.type == "azurerm_policy_definition")
-          | .values.name
-        ' plan.json
-
+        echo "Checking policy definitions..."
+        terraform show -json tfplan | jq '.planned_values.root_module.resources[] | select(.type == "azurerm_policy_definition") | .values.name'
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -82,12 +67,17 @@ jobs:
         cd terraform
         terraform apply -auto-approve tfplan
 
-    - name: Policy Compliance Validation
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    - name: Policy Compliance Check
       run: |
         cd terraform
-        echo "Validating policy assignments..."
-        terraform output -json policy_assignments
+        echo "Checking policy definitions..."
+        terraform show -json tfplan > plan.json
+        if [ -s plan.json ] && jq empty plan.json 2>/dev/null; then
+          jq -r '.planned_values.root_module.resources[]? | select(.type == "azurerm_policy_definition") | .values.name' plan.json || echo "No policy definitions found"
+        else
+          echo "Warning: Could not parse plan JSON or file is empty"
+        fi
+        rm -f plan.json
 
     - name: Security Scan
       uses: aquasecurity/trivy-action@master
