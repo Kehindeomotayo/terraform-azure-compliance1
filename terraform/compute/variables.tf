@@ -16,4 +16,14 @@ variable "vm_size" {
   default     = "Standard_B1s"
 }
 
+variable "common_tags" {
+  description = "Common tags for all resources"
+  type        = map(string)
+}
+
+variable "resource_prefix" {
+  description = "Prefix for resource names"
+  type        = string
+}
+
 # Add other variables as needed by your compute resources

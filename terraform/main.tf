@@ -3,6 +3,8 @@ data "azurerm_client_config" "current" {}
 
 module "compute" {
   source              = "./compute"
+  common_tags         = var.common_tags
+  resource_prefix     = var.resource_prefix
   resource_group_name = azurerm_resource_group.development.name
   location            = azurerm_resource_group.development.location
 }
