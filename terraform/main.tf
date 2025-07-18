@@ -1,7 +1,7 @@
 module "compute" {
-  source   = "./compute"
-  resource_group_name  = azurerm_resource_group.development.name
-  location = azurerm_resource_group.development.location
+  source              = "./compute"
+  resource_group_name = azurerm_resource_group.development.name
+  location            = azurerm_resource_group.development.location
 }
 
 module "storage" {
