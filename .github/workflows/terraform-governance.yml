@@ -58,14 +58,23 @@ jobs:
     - name: Policy Compliance Check
       run: |
         cd terraform
-        echo "Running terraform plan and checking policy definitions..."
+    
+        echo "Initializing Terraform..."
         terraform init -input=false
+    
+        echo "Creating binary plan..."
         terraform plan -out=tfplan -input=false
-        terraform show -json tfplan | jq -r '
+    
+        echo "Converting plan to JSON..."
+        terraform show -json tfplan > plan.json
+    
+        echo "Checking policy definitions in JSON..."
+        jq -r '
           .planned_values.root_module.resources[]
           | select(.type == "azurerm_policy_definition")
           | .values.name
-        '
+        ' plan.json
+
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
