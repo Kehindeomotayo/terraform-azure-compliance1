@@ -58,8 +58,14 @@ jobs:
     - name: Policy Compliance Check
       run: |
         cd terraform
-        echo "Checking policy definitions..."
-        terraform show -json tfplan | jq '.planned_values.root_module.resources[] | select(.type == "azurerm_policy_definition") | .values.name'
+        echo "Running terraform plan and checking policy definitions..."
+        terraform init -input=false
+        terraform plan -out=tfplan -input=false
+        terraform show -json tfplan | jq -r '
+          .planned_values.root_module.resources[]
+          | select(.type == "azurerm_policy_definition")
+          | .values.name
+        '
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -87,4 +93,3 @@ jobs:
       with:
         sarif_file: 'trivy-results.sarif'
 
-#
