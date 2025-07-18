@@ -1,14 +1,14 @@
 module "compute" {
   source   = "./compute"
-  dev_rg  = azurerm_resource_group.development.name
+  dev_rg   = azurerm_resource_group.development.name
   location = azurerm_resource_group.development.location
 }
 
 module "storage" {
-  source             = "./storage"
+  source        = "./storage"
   storage_rg    = azurerm_resource_group.storage.name
   enterprise_rg = azurerm_resource_group.enterprise.name
-  location           = var.location
+  location      = var.location
 }
 
 module "policies" {
