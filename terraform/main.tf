@@ -1,3 +1,6 @@
+# Data sources
+data "azurerm_client_config" "current" {}
+
 module "compute" {
   source         = "./compute"
   development_rg = azurerm_resource_group.development.name
