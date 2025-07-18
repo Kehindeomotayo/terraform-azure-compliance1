@@ -1,6 +1,6 @@
 # storage/variables.tf
 
-variable "resource_group_name" {
+variable "rg_name" {
   description = "The resource group name for storage resources"
   type        = string
 }
