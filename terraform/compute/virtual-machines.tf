@@ -116,7 +116,7 @@ resource "azurerm_linux_virtual_machine" "development_vm" {
 resource "azurerm_network_interface" "vm_enterprise_nic" {
   name                = "${var.resource_prefix}-vm-enterprise-nic"
   location            = var.location
-  resource_group_name = azurerm_resource_group.enterprise.name
+  resource_group_name = var.enterprise_rg
 
   tags = merge(var.common_tags, {
     Purpose = "Enterprise VM Network"
