@@ -1,6 +1,6 @@
 module "compute" {
   source   = "./compute"
-  rg_name  = azurerm_resource_group.development.name
+  resource_group_name  = azurerm_resource_group.development.name
   location = azurerm_resource_group.development.location
 }
 
