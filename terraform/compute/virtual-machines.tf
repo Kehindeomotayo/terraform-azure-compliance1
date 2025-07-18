@@ -132,7 +132,7 @@ resource "azurerm_network_interface" "vm_enterprise_nic" {
 resource "azurerm_linux_virtual_machine" "enterprise_vm" {
   name                = "${var.resource_prefix}-enterprise-vm"
   location            = var.location
-  resource_group_name = azurerm_resource_group.enterprise.name
+  resource_group_name = var.enterprise_rg
   size                = "Standard_B2s"
   admin_username      = "azureuser"
 
