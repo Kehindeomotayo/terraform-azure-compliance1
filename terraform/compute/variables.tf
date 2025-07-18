@@ -11,8 +11,11 @@ variable "location" {
 }
 
 variable "enterprise_rg" {
-  description = "The resource group name for storage resources"
-  type        = string
+  type = object({
+    id       = string
+    name     = string
+    location = string
+  })
 }
 
 variable "vm_size" {
