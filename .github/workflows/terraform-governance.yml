@@ -71,13 +71,7 @@ jobs:
       run: |
         cd terraform
         echo "Checking policy definitions..."
-        terraform show -json tfplan > plan.json
-        if [ -s plan.json ] && jq empty plan.json 2>/dev/null; then
-          jq -r '.planned_values.root_module.resources[]? | select(.type == "azurerm_policy_definition") | .values.name' plan.json || echo "No policy definitions found"
-        else
-          echo "Warning: Could not parse plan JSON or file is empty"
-        fi
-        rm -f plan.json
+        terraform show tfplan | grep -E "(azurerm_policy_definition|azurerm_policy_assignment)" || echo "No policy resources found in plan"
 
     - name: Security Scan
       uses: aquasecurity/trivy-action@master
