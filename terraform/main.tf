@@ -2,9 +2,9 @@
 data "azurerm_client_config" "current" {}
 
 module "compute" {
-  source         = "./compute"
-  development_rg = azurerm_resource_group.development.name
-  location       = azurerm_resource_group.development.location
+  source              = "./compute"
+  resource_group_name = azurerm_resource_group.development.name
+  location            = azurerm_resource_group.development.location
 }
 
 module "storage" {

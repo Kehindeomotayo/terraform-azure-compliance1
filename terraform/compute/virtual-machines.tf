@@ -9,13 +9,13 @@ resource "azurerm_virtual_network" "vm_vnet" {
   name                = "${var.resource_prefix}-vm-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = azurerm_resource_group.development.name
+  resource_group_name = var.resource_group_name
   tags                = var.common_tags
 }
 
 resource "azurerm_subnet" "vm_subnet" {
   name                 = "vm-subnet"
-  resource_group_name  = azurerm_resource_group.development.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vm_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
@@ -24,7 +24,7 @@ resource "azurerm_subnet" "vm_subnet" {
 resource "azurerm_network_security_group" "vm_nsg" {
   name                = "${var.resource_prefix}-vm-nsg"
   location            = var.location
-  resource_group_name = azurerm_resource_group.development.name
+  resource_group_name = var.resource_group_name
   tags                = var.common_tags
 
   security_rule {
@@ -44,7 +44,7 @@ resource "azurerm_network_security_group" "vm_nsg" {
 resource "azurerm_public_ip" "vm_dev_ip" {
   name                = "${var.resource_prefix}-vm-dev-ip"
   location            = var.location
-  resource_group_name = azurerm_resource_group.development.name
+  resource_group_name = var.resource_group_name
   allocation_method   = "Static"
 
   tags = merge(var.common_tags, {
@@ -57,7 +57,7 @@ resource "azurerm_public_ip" "vm_dev_ip" {
 resource "azurerm_network_interface" "vm_dev_nic" {
   name                = "${var.resource_prefix}-vm-dev-nic"
   location            = var.location
-  resource_group_name = azurerm_resource_group.development.name
+  resource_group_name = var.resource_group_name
 
   tags = merge(var.common_tags, {
     Environment = "Development"
@@ -75,7 +75,7 @@ resource "azurerm_network_interface" "vm_dev_nic" {
 resource "azurerm_linux_virtual_machine" "development_vm" {
   name                = "${var.resource_prefix}-development-vm"
   location            = var.location
-  resource_group_name = azurerm_resource_group.development.name
+  resource_group_name = var.resource_group_name
   size                = "Standard_B2s"
   admin_username      = "azureuser"
 

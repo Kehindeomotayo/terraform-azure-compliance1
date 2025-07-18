@@ -8,7 +8,7 @@ resource "random_string" "storage_suffix" {
 # Storage Account in Storage Resource Group - Subject to Storage-specific policy
 resource "azurerm_storage_account" "storage_rg_account" {
   name                     = "${lower(replace(var.resource_prefix, "-", ""))}storage${random_string.storage_suffix.result}"
-  resource_group_name      = azurerm_resource_group.storage.name
+  resource_group_name      = var.storage_rg
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "storage_rg_account" {
 # Storage Account in Enterprise Resource Group - Subject to Enterprise Initiative
 resource "azurerm_storage_account" "enterprise_storage" {
   name                     = "${lower(replace(var.resource_prefix, "-", ""))}ent${random_string.storage_suffix.result}"
-  resource_group_name      = azurerm_resource_group.enterprise.name
+  resource_group_name      = var.enterprise_rg
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
@@ -61,6 +61,6 @@ resource "azurerm_storage_account" "enterprise_storage" {
 # Storage Container for demonstration
 resource "azurerm_storage_container" "demo_container" {
   name                  = "demo-data"
-  storage_account_name  = azurerm_storage_account.storage_rg_account.name
+  resource_group_name   = var.storage_rg
   container_access_type = "private"
 }

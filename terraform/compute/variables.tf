@@ -1,6 +1,6 @@
 # compute/variables.tf
 
-variable "development_rg" {
+variable "resource_group_name" {
   description = "The resource group name for compute resources"
   type        = string
 }
