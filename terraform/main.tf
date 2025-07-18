@@ -5,6 +5,7 @@ module "compute" {
   source              = "./compute"
   common_tags         = var.common_tags
   resource_prefix     = var.resource_prefix
+  enterprise_rg       = azurerm_resource_group.enterprise
   resource_group_name = azurerm_resource_group.development.name
   location            = azurerm_resource_group.development.location
 }
