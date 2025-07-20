@@ -1,6 +1,6 @@
 # Random suffix for storage account names
 resource "random_string" "storage_suffix" {
-  length  = 8
+  length  = 2
   special = false
   upper   = false
 }
