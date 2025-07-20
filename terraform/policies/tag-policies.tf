@@ -4,7 +4,7 @@ resource "azurerm_policy_definition" "require_vm_tags" {
   policy_type  = "Custom"
   mode         = "Indexed"
   display_name = "Require Mandatory Tags on Virtual Machines"
-  description  = "This policy requires specific tags on all Virtual Machines for compliance and governance"
+  #description  = "This policy requires specific tags on all Virtual Machines for compliance and governance"
 
   metadata = jsonencode({
     category = "Tags"
@@ -46,9 +46,9 @@ resource "azurerm_policy_definition" "require_vm_tags" {
     }
     then = {
       effect = "deny"
-      details = {
-        message = "Virtual Machines must have the following tags: Environment, Owner, Department, Project, CostCenter"
-      }
+      #details = {
+        #message = "Virtual Machines must have the following tags: Environment, Owner, Department, Project, CostCenter"
+      #}
     }
   })
 
@@ -61,7 +61,7 @@ resource "azurerm_policy_definition" "require_storage_tags" {
   policy_type  = "Custom"
   mode         = "Indexed"
   display_name = "Require Mandatory Tags on Storage Accounts"
-  description  = "This policy requires specific tags on all Storage Accounts for compliance and governance"
+  #description  = "This policy requires specific tags on all Storage Accounts for compliance and governance"
 
   metadata = jsonencode({
     category = "Tags"
@@ -103,9 +103,9 @@ resource "azurerm_policy_definition" "require_storage_tags" {
     }
     then = {
       effect = "deny"
-      details = {
-        message = "Storage Accounts must have the following tags: Environment, Owner, Department, Compliance, DataClassification"
-      }
+      # details = {
+      #   message = "Storage Accounts must have the following tags: Environment, Owner, Department, Compliance, DataClassification"
+      # }
     }
   })
 
@@ -118,7 +118,7 @@ resource "azurerm_policy_definition" "validate_environment_tag" {
   policy_type  = "Custom"
   mode         = "Indexed"
   display_name = "Validate Environment Tag Values"
-  description  = "This policy validates that Environment tag contains only allowed values"
+  #description  = "This policy validates that Environment tag contains only allowed values"
 
   metadata = jsonencode({
     category = "Tags"
@@ -152,9 +152,9 @@ resource "azurerm_policy_definition" "validate_environment_tag" {
     }
     then = {
       effect = "deny"
-      details = {
-        message = "Environment tag must be one of the allowed values: Development, Testing, Staging, Production"
-      }
+      # details = {
+      #   message = "Environment tag must be one of the allowed values: Development, Testing, Staging, Production"
+      # }
     }
   })
 
@@ -176,7 +176,7 @@ resource "azurerm_policy_definition" "audit_missing_tags" {
   policy_type  = "Custom"
   mode         = "Indexed"
   display_name = "Audit Resources Missing Required Tags"
-  description  = "This policy audits resources that are missing required tags for compliance reporting"
+  #description  = "This policy audits resources that are missing required tags for compliance reporting"
 
   metadata = jsonencode({
     category = "Tags"
@@ -222,9 +222,9 @@ resource "azurerm_policy_definition" "audit_missing_tags" {
     }
     then = {
       effect = "audit"
-      details = {
-        message = "Resource is missing one or more required tags: Environment, Owner, Department, Project"
-      }
+      # details = {
+      #   message = "Resource is missing one or more required tags: Environment, Owner, Department, Project"
+      # }
     }
   })
 
