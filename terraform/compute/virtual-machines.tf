@@ -41,8 +41,8 @@ resource "azurerm_network_security_group" "vm_nsg" {
 }
 
 # Public IP for VM (Development)
-resource "azurerm_public_ip" "vm_development_ip" {
-  name                = "${var.resource_prefix}-vm-development-ip"
+resource "azurerm_public_ip" "vm_dev_ip" {
+  name                = "${var.resource_prefix}-vm-dev-ip"
   location            = var.location
   resource_group_name = var.resource_group_name
   allocation_method   = "Static"
@@ -54,8 +54,8 @@ resource "azurerm_public_ip" "vm_development_ip" {
 }
 
 # Network Interface for Development VM
-resource "azurerm_network_interface" "vm_development_nic" {
-  name                = "${var.resource_prefix}-vm-development-nic"
+resource "azurerm_network_interface" "vm_dev_nic" {
+  name                = "${var.resource_prefix}-vm-dev-nic"
   location            = var.location
   resource_group_name = var.resource_group_name
 
