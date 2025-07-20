@@ -47,7 +47,7 @@ resource "azurerm_policy_definition" "require_vm_tags" {
     then = {
       effect = "deny"
       #details = {
-        #message = "Virtual Machines must have the following tags: Environment, Owner, Department, Project, CostCenter"
+      #message = "Virtual Machines must have the following tags: Environment, Owner, Department, Project, CostCenter"
       #}
     }
   })
