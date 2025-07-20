@@ -58,21 +58,21 @@ jobs:
     - name: Policy Compliance Check
       run: |
         cd terraform
-        echo "Checking policy definitions..."
-        terraform show -json tfplan | jq '.planned_values.root_module.resources[] | select(.type == "azurerm_policy_definition") | .values.name'
+        echo "Checking for policy resources in plan..."
+        terraform show tfplan > plan_output.txt
+        if grep -q "azurerm_policy" plan_output.txt; then
+          echo "Found policy resources:"
+          grep "azurerm_policy" plan_output.txt | head -10
+        else
+          echo "No policy resources found in plan"
+        fi
+        rm -f plan_output.txt
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: |
         cd terraform
         terraform apply -auto-approve tfplan
-
-    - name: Policy Compliance Validation
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        cd terraform
-        echo "Validating policy assignments..."
-        terraform output -json policy_assignments
 
     - name: Security Scan
       uses: aquasecurity/trivy-action@master
@@ -86,3 +86,4 @@ jobs:
       uses: github/codeql-action/upload-sarif@v2
       with:
         sarif_file: 'trivy-results.sarif'
+

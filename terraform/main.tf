@@ -1,58 +1,87 @@
 # Data sources
 data "azurerm_client_config" "current" {}
 
-# Output important information
-output "policy_assignments" {
-  description = "Policy assignments created"
-  value = {
-    vm_policy_development = {
-      name           = azurerm_resource_group_policy_assignment.vm_tags_development.name
-      resource_group = azurerm_resource_group.development.name
-      policy_type    = "Custom VM Tags Policy"
-    }
-    storage_policy_storage_rg = {
-      name           = azurerm_resource_group_policy_assignment.storage_tags_storage_rg.name
-      resource_group = azurerm_resource_group.storage.name
-      policy_type    = "Custom Storage Tags Policy"
-    }
-    enterprise_initiative = {
-      name           = azurerm_resource_group_policy_assignment.enterprise_initiative.name
-      resource_group = azurerm_resource_group.enterprise.name
-      policy_type    = "Enterprise Initiative (Multiple Policies)"
-    }
-    audit_subscription = {
-      name           = azurerm_subscription_policy_assignment.audit_tags_subscription.name
-      scope          = "Subscription"
-      policy_type    = "Audit Policy"
-    }
-  }
+module "compute" {
+  source              = "./compute"
+  common_tags         = var.common_tags
+  resource_prefix     = var.resource_prefix
+  enterprise_rg       = azurerm_resource_group.enterprise
+  resource_group_name = azurerm_resource_group.development.name
+  location            = azurerm_resource_group.development.location
 }
 
-output "resource_groups" {
-  description = "Resource groups and their purposes"
-  value = {
-    development = {
-      name    = azurerm_resource_group.development.name
-      purpose = "VM development with VM-specific policy"
-    }
-    storage = {
-      name    = azurerm_resource_group.storage.name
-      purpose = "Storage services with Storage-specific policy"
-    }
-    enterprise = {
-      name    = azurerm_resource_group.enterprise.name
-      purpose = "Enterprise resources with comprehensive initiative"
-    }
-  }
+module "storage" {
+  source          = "./storage"
+  storage_rg      = azurerm_resource_group.storage.name
+  enterprise_rg   = azurerm_resource_group.enterprise.name
+  common_tags     = var.common_tags
+  resource_prefix = var.resource_prefix
+  location        = var.location
 }
 
-output "ssh_private_key" {
-  description = "SSH private key for VM access"
-  value       = tls_private_key.vm_ssh.private_key_pem
-  sensitive   = true
+module "policies" {
+  source          = "./policies"
+  development_rg  = azurerm_resource_group.development
+  storage_rg      = azurerm_resource_group.storage
+  enterprise_rg   = azurerm_resource_group.enterprise
+  subscription_id = data.azurerm_client_config.current.subscription_id
 }
 
-output "vm_public_ip" {
-  description = "Public IP of development VM"
-  value       = azurerm_public_ip.vm_dev_ip.ip_address
-}
+
+# # main.tf - Root module that calls submodules
+
+# # Call the policies module
+# module "policies" {
+#   source = "./policies"
+
+#   # Pass any required variables to the policies module
+#   subscription_id     = var.subscription_id
+#   resource_group_name = var.resource_group_name
+# }
+
+# # Call the compute module
+# module "compute" {
+#   source = "./compute"
+
+#   # Pass any required variables to the compute module
+#   resource_group_name = var.resource_group_name
+#   location            = var.location
+#   vm_size             = var.vm_size
+# }
+
+# # Call the storage module
+# module "storage" {
+#   source = "./storage"
+
+#   # Pass any required variables to the storage module
+#   resource_group_name  = var.resource_group_name
+#   location             = var.location
+#   storage_account_name = var.storage_account_name
+# }
+
+# # Outputs referencing module outputs instead of direct resources
+# output "policy_assignments" {
+#   value = {
+#     vm_tags_development = {
+#       name = module.policies.vm_tags_development_assignment_name
+#     }
+#     storage_tags_storage_rg = {
+#       name = module.policies.storage_tags_assignment_name
+#     }
+#     enterprise_initiative = {
+#       name = module.policies.enterprise_initiative_assignment_name
+#     }
+#     audit_tags_subscription = {
+#       name = module.policies.audit_tags_subscription_assignment_name
+#     }
+#   }
+# }
+
+# output "ssh_private_key" {
+#   value     = module.compute.ssh_private_key
+#   sensitive = true
+# }
+
+# output "vm_public_ip" {
+#   value = module.compute.vm_public_ip
+# }

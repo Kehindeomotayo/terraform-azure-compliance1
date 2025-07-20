@@ -10,7 +10,7 @@ terraform {
       version = "~> 3.4"
     }
   }
-  
+
   backend "azurerm" {
     resource_group_name  = "tfstate-governance-rg"
     storage_account_name = "tfstategovernance82"

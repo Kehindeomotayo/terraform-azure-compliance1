@@ -15,29 +15,29 @@ resource "azurerm_policy_definition" "require_vm_tags" {
     if = {
       allOf = [
         {
-          field = "type"
+          field  = "type"
           equals = "Microsoft.Compute/virtualMachines"
         },
         {
           anyOf = [
             {
-              field = "tags['Environment']"
+              field  = "tags['Environment']"
               exists = false
             },
             {
-              field = "tags['Owner']"
+              field  = "tags['Owner']"
               exists = false
             },
             {
-              field = "tags['Department']"
+              field  = "tags['Department']"
               exists = false
             },
             {
-              field = "tags['Project']"
+              field  = "tags['Project']"
               exists = false
             },
             {
-              field = "tags['CostCenter']"
+              field  = "tags['CostCenter']"
               exists = false
             }
           ]
@@ -72,29 +72,29 @@ resource "azurerm_policy_definition" "require_storage_tags" {
     if = {
       allOf = [
         {
-          field = "type"
+          field  = "type"
           equals = "Microsoft.Storage/storageAccounts"
         },
         {
           anyOf = [
             {
-              field = "tags['Environment']"
+              field  = "tags['Environment']"
               exists = false
             },
             {
-              field = "tags['Owner']"
+              field  = "tags['Owner']"
               exists = false
             },
             {
-              field = "tags['Department']"
+              field  = "tags['Department']"
               exists = false
             },
             {
-              field = "tags['Compliance']"
+              field  = "tags['Compliance']"
               exists = false
             },
             {
-              field = "tags['DataClassification']"
+              field  = "tags['DataClassification']"
               exists = false
             }
           ]
@@ -131,17 +131,17 @@ resource "azurerm_policy_definition" "validate_environment_tag" {
         {
           anyOf = [
             {
-              field = "type"
+              field  = "type"
               equals = "Microsoft.Compute/virtualMachines"
             },
             {
-              field = "type"
+              field  = "type"
               equals = "Microsoft.Storage/storageAccounts"
             }
           ]
         },
         {
-          field = "tags['Environment']"
+          field  = "tags['Environment']"
           exists = true
         },
         {
@@ -189,11 +189,11 @@ resource "azurerm_policy_definition" "audit_missing_tags" {
         {
           anyOf = [
             {
-              field = "type"
+              field  = "type"
               equals = "Microsoft.Compute/virtualMachines"
             },
             {
-              field = "type"
+              field  = "type"
               equals = "Microsoft.Storage/storageAccounts"
             }
           ]
@@ -201,19 +201,19 @@ resource "azurerm_policy_definition" "audit_missing_tags" {
         {
           anyOf = [
             {
-              field = "tags['Environment']"
+              field  = "tags['Environment']"
               exists = false
             },
             {
-              field = "tags['Owner']"
+              field  = "tags['Owner']"
               exists = false
             },
             {
-              field = "tags['Department']"
+              field  = "tags['Department']"
               exists = false
             },
             {
-              field = "tags['Project']"
+              field  = "tags['Project']"
               exists = false
             }
           ]
