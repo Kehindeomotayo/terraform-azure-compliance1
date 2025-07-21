@@ -5,10 +5,22 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Choose action to perform'
+        required: true
+        default: 'apply'
+        type: choice
+        options:
+        - apply
+        - destroy
 
 permissions:
   contents: read
   pull-requests: write
+  security-events: write
+  actions: read 
 
 env:
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -74,6 +86,13 @@ jobs:
         cd terraform
         terraform apply -auto-approve tfplan
 
+    - name: Terraform Destroy
+      #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
+      run: |
+        cd terraform
+        terraform destroy -auto-approve tfplan
+
     - name: Security Scan
       uses: aquasecurity/trivy-action@master
       with:
@@ -83,7 +102,7 @@ jobs:
         output: 'trivy-results.sarif'
 
     - name: Upload Trivy scan results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: 'trivy-results.sarif'
 

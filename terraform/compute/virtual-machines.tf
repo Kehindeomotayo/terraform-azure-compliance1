@@ -1,9 +1,3 @@
-# SSH Key for VM access
-resource "tls_private_key" "vm_ssh" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
 # Virtual Network for VMs
 resource "azurerm_virtual_network" "vm_vnet" {
   name                = "${var.resource_prefix}-vm-vnet"
@@ -40,6 +34,12 @@ resource "azurerm_network_security_group" "vm_nsg" {
   }
 }
 
+# Associate Network Security Group to Subnet
+resource "azurerm_subnet_network_security_group_association" "vm_subnet_nsg" {
+  subnet_id                 = azurerm_subnet.vm_subnet.id
+  network_security_group_id = azurerm_network_security_group.vm_nsg.id
+}
+
 # Public IP for VM (Development)
 resource "azurerm_public_ip" "vm_dev_ip" {
   name                = "${var.resource_prefix}-vm-dev-ip"
@@ -72,6 +72,12 @@ resource "azurerm_network_interface" "vm_dev_nic" {
   }
 }
 
+# Data source to get the existing SSH key pair
+data "azurerm_ssh_public_key" "azure_key" {
+  name                = "azure-key"
+  resource_group_name = var.resource_group_name
+}
+
 # Development VM - This will be subject to VM-specific policy
 resource "azurerm_linux_virtual_machine" "development_vm" {
   name                = "${var.resource_prefix}-development-vm"
@@ -97,7 +103,7 @@ resource "azurerm_linux_virtual_machine" "development_vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = tls_private_key.vm_ssh.public_key_openssh
+    public_key = data.azurerm_ssh_public_key.azure_key.public_key
   }
 
   os_disk {
@@ -154,7 +160,7 @@ resource "azurerm_linux_virtual_machine" "enterprise_vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = tls_private_key.vm_ssh.public_key_openssh
+    public_key = data.azurerm_ssh_public_key.azure_key.public_key
   }
 
   os_disk {
