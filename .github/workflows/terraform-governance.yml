@@ -91,7 +91,7 @@ jobs:
       if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
       run: |
         cd terraform
-        terraform destroy -auto-approve tfplan
+        terraform destroy -auto-approve
 
     - name: Security Scan
       uses: aquasecurity/trivy-action@master
