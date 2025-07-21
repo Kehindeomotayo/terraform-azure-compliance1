@@ -103,7 +103,7 @@ resource "azurerm_linux_virtual_machine" "development_vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = data.azurerm_ssh_public_key.azure_key.public_key
+    public_key = data.azurerm_ssh_public_key.azure_keys.public_key
   }
 
   os_disk {
@@ -160,7 +160,7 @@ resource "azurerm_linux_virtual_machine" "enterprise_vm" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = data.azurerm_ssh_public_key.azure_key.public_key
+    public_key = data.azurerm_ssh_public_key.azure_keys.public_key
   }
 
   os_disk {
