@@ -74,7 +74,7 @@ resource "azurerm_network_interface" "vm_dev_nic" {
 
 # Data source to get the existing SSH key pair
 data "azurerm_ssh_public_key" "azure_key" {
-  name                = "azure-key"
+  name                = "azure-keys-rsa"
   resource_group_name = var.resource_group_name
 }
 
