@@ -27,70 +27,69 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
-    defaults:
-      run:
-        shell: bash
-
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-      env:
-        AZURE_LOG_LEVEL: debug
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - run: az account show
+      - run: |
+          CREDS_JSON='${{ secrets.AZURE_CREDENTIALS }}'
+          echo "ARM_CLIENT_ID=$(echo $CREDS_JSON | jq -r .clientId)" >> $GITHUB_ENV
+          echo "ARM_CLIENT_SECRET=$(echo $CREDS_JSON | jq -r .clientSecret)" >> $GITHUB_ENV
+          echo "ARM_SUBSCRIPTION_ID=$(echo $CREDS_JSON | jq -r .subscriptionId)" >> $GITHUB_ENV
+          echo "ARM_TENANT_ID=$(echo $CREDS_JSON | jq -r .tenantId)" >> $GITHUB_ENV
 
-    - uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.5.0
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
 
-    - run: |
-        cd terraform
-        terraform init
+      - run: |
+          cd terraform
+          terraform init
 
-    - run: |
-        cd terraform
-        terraform fmt -check -recursive
+      - run: |
+          cd terraform
+          terraform fmt -check -recursive
 
-    - run: |
-        cd terraform
-        terraform validate
+      - run: |
+          cd terraform
+          terraform validate
 
-    - run: |
-        cd terraform
-        terraform plan -input=false -out=tfplan
+      - run: |
+          cd terraform
+          terraform plan -input=false -out=tfplan
 
-    - run: |
-        cd terraform
-        echo "Checking for policy resources in plan..."
-        terraform show tfplan > plan_output.txt
-        if grep -q "azurerm_policy" plan_output.txt; then
-          echo "Found policy resources:"
-          grep "azurerm_policy" plan_output.txt | head -10
-        else
-          echo "No policy resources found in plan"
-        fi
-        rm -f plan_output.txt
+      - run: |
+          cd terraform
+          echo "Checking for policy resources in plan..."
+          terraform show tfplan > plan_output.txt
+          if grep -q "azurerm_policy" plan_output.txt; then
+            echo "Found policy resources:"
+            grep "azurerm_policy" plan_output.txt | head -10
+          else
+            echo "No policy resources found in plan"
+          fi
+          rm -f plan_output.txt
 
-    - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: |
-        cd terraform
-        terraform apply -auto-approve tfplan
+      - if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd terraform
+          terraform apply -auto-approve tfplan
 
-    - if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
-      run: |
-        cd terraform
-        terraform destroy -auto-approve
+      - if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
+        run: |
+          cd terraform
+          terraform destroy -auto-approve
 
-    - uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'config'
-        scan-ref: 'terraform/'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: 'terraform/'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
 
-    - uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: 'trivy-results.sarif'
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
