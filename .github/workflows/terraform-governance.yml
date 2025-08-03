@@ -20,7 +20,7 @@ permissions:
   contents: read
   pull-requests: write
   security-events: write
-  actions: read 
+  actions: read
 
 jobs:
   terraform:
@@ -33,45 +33,85 @@ jobs:
         shell: bash
 
     steps:
+    # ✅ Step 1: Checkout repository
     - name: Checkout
       uses: actions/checkout@v3
 
-    # ✅ Azure Login using Service Principal credentials from GitHub Secret
+    # ✅ Step 2: Azure Login using JSON secret
     - name: Azure Login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    # ✅ Setup Terraform
+    # ✅ Step 3: Setup Terraform
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.5.0
 
-    # ✅ Terraform Init
+    # ✅ Step 4: Terraform Init
     - name: Terraform Init
       run: |
         cd terraform
         terraform init
 
+    # ✅ Step 5: Terraform Format Check
     - name: Terraform Format Check
       run: |
         cd terraform
         terraform fmt -check -recursive
 
+    # ✅ Step 6: Terraform Validate
     - name: Terraform Validate
       run: |
         cd terraform
         terraform validate
 
+    # ✅ Step 7: Terraform Plan
     - name: Terraform Plan
       run: |
         cd terraform
         terraform plan -input=false -out=tfplan
 
+    # ✅ Step 8: Policy Compliance Check
     - name: Policy Compliance Check
       run: |
         cd terraform
         echo "Checking for policy resources in plan..."
         terraform show tfplan > plan_output.txt
-        if grep -q "azurerm_policy" plan_outpu
+        if grep -q "azurerm_policy" plan_output.txt; then
+          echo "Found policy resources:"
+          grep "azurerm_policy" plan_output.txt | head -10
+        else
+          echo "No policy resources found in plan"
+        fi
+        rm -f plan_output.txt
+
+    # ✅ Step 9: Terraform Apply (only on push to main)
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: |
+        cd terraform
+        terraform apply -auto-approve tfplan
+
+    # ✅ Step 10: Terraform Destroy (manual trigger)
+    - name: Terraform Destroy
+      if: github.event.inputs.action == 'destroy' && github.event_name == 'workflow_dispatch'
+      run: |
+        cd terraform
+        terraform destroy -auto-approve
+
+    # ✅ Step 11: Security Scan with Trivy
+    - name: Security Scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'config'
+        scan-ref: 'terraform/'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    # ✅ Step 12: Upload Trivy scan results
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-results.sarif'
